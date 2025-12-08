@@ -1,0 +1,25 @@
+name: Test Webb3
+on: push
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          corepack: true
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Node Dependencies
+        run: yarn install
+
+      - name: Test
+        run: yarn test
