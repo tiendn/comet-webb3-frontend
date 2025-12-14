@@ -18,7 +18,6 @@ const LEGACY = 'Legacy';
 
 const MarketSelector = () => {
   const [marketDropdownActive, setMarketDropdownActive] = useState<boolean>(false);
-  const [showV2Alert, setShowV2Alert] = useState<boolean>(false);
   const { selectedMarket, selectMarket } = useContext(getSelectedMarketContext());
   const [selectedChainId, setSelectedChainId] = useState<number>(selectedMarket[1]?.chainInformation.chainId ?? 1);
   const [, currentMarket] = selectedMarket;
@@ -29,45 +28,14 @@ const MarketSelector = () => {
 
   useOnClickOutside(ref, () => setMarketDropdownActive(false));
 
-  useEffect(() => {
-    const maybeV2AlertDismissed = window.localStorage.getItem(V2_ALERT_DISMISSED_KEY);
-    if (maybeV2AlertDismissed !== undefined && maybeV2AlertDismissed === 'true') {
-      setShowV2Alert(false);
-    } else {
-      setShowV2Alert(true);
-    }
-  }, []);
-
-  const dismissV2Alert = () => {
-    setShowV2Alert(false);
-    window.localStorage.setItem(V2_ALERT_DISMISSED_KEY, 'true');
-  };
-
   return (
     <div ref={ref} className="header__pill-dropdown market-selector L2">
-      {showV2Alert && location.pathname === '/' && (
-        <div className="tooltip tooltip--sticky L4">
-          <div className="tooltip__close-button" onClick={dismissV2Alert}>
-            <Close className="svg--icon--2" />
-          </div>
-          <div className="tooltip__header-icon">
-            <MagnifyingGlass />
-          </div>
-          <h4 className="heading heading--emphasized">Looking for V2?</h4>
-          <p className="body text-color--2" style={{ marginTop: '0.5rem' }}>
-            Open the Market Selector to choose between both markets and interfaces.
-          </p>
-        </div>
-      )}
       <div className="dropdown">
         <SelectedMarket
           active={marketDropdownActive}
           market={currentMarket}
           onClick={() => {
             setMarketDropdownActive(!marketDropdownActive);
-            if (showV2Alert) {
-              dismissV2Alert();
-            }
           }}
         />
 
